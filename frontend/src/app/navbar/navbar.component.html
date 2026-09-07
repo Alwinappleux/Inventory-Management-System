@@ -1,0 +1,26 @@
+<nav>
+	<a class="brand" routerLink="/dashboard">
+		<span class="brand-mark" aria-hidden="true">IM</span>
+		<span>
+			<strong>Inventory</strong>
+			<small>Management</small>
+		</span>
+	</a>
+
+	<div class="nav-links">
+		<ng-container *ngIf="authService.hasRole('admin')">
+			<a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+			<a routerLink="/add-product" routerLinkActive="active">Add Product / Supplier</a>
+		</ng-container>
+		<a routerLink="/product" routerLinkActive="active">Products</a>
+		<a routerLink="/supplier" routerLinkActive="active">Suppliers</a>
+		<a routerLink="/add-sales" routerLinkActive="active">Add Sale</a>
+		<a routerLink="/sales-list" routerLinkActive="active">Sales List</a>
+		<ng-container *ngIf="authService.hasRole('admin')">
+			<a routerLink="/add-user" routerLinkActive="active">Add User</a>
+			<a routerLink="/user-list" routerLinkActive="active">Users</a>
+		</ng-container>
+	</div>
+
+	<button class="logout-link" type="button" (click)="logout()">Sign out</button>
+</nav>

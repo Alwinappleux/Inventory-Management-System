@@ -1,0 +1,64 @@
+<app-navbar></app-navbar>
+
+<main class="page-shell">
+    <header class="page-header">
+        <div>
+            <span class="page-eyebrow">Partner directory</span>
+            <h1>Suppliers</h1>
+            <p>Keep supplier contacts and business details organized.</p>
+        </div>
+        <div class="record-count">
+            <strong>{{ suppliers.length }}</strong>
+            <span>suppliers</span>
+        </div>
+    </header>
+
+    <section class="table-card">
+        <div class="table-toolbar">
+            <h2>Supplier list</h2>
+            <span class="table-caption">Your business partners</span>
+        </div>
+
+        <div class="list-controls">
+            <input type="search" [(ngModel)]="searchTerm" placeholder="Search suppliers or contacts" aria-label="Search suppliers">
+            <select [(ngModel)]="contactFilter" aria-label="Filter suppliers by email">
+                <option value="all">All suppliers</option>
+                <option value="email">With email</option>
+                <option value="no-email">Without email</option>
+            </select>
+        </div>
+
+        <div class="table-scroll" *ngIf="filteredSuppliers.length > 0">
+            <table>
+                <thead>
+                    <tr>
+                        <th><button type="button" class="sort-button" (click)="setSort('supplier_id')">ID</button></th>
+                        <th><button type="button" class="sort-button" (click)="setSort('supplier_name')">Supplier</button></th>
+                        <th><button type="button" class="sort-button" (click)="setSort('contact_number')">Contact</button></th>
+                        <th><button type="button" class="sort-button" (click)="setSort('email')">Email</button></th>
+                        <th><button type="button" class="sort-button" (click)="setSort('address')">Address</button></th>
+                        <th *ngIf="isAdmin" style="text-align: left;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let supplier of filteredSuppliers">
+                        <td class="muted-cell">#{{ supplier.supplier_id }}</td>
+                        <td class="name-cell">{{ supplier.supplier_name }}</td>
+                        <td>{{ supplier.contact_number }}</td>
+                        <td class="email-cell">{{ supplier.email }}</td>
+                        <td>{{ supplier.address }}</td>
+                        <td class="action-cell" *ngIf="isAdmin">
+                            <button class="edit-btn" type="button" (click)="editSupplier(supplier)">Edit</button>
+                            <button class="delete-btn" type="button" (click)="deleteSupplier(supplier.supplier_id)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state" *ngIf="filteredSuppliers.length === 0">
+            <strong>{{ suppliers.length === 0 ? 'No suppliers yet' : 'No matching suppliers' }}</strong>
+            <span>{{ suppliers.length === 0 ? 'Add a supplier to make it available for your products.' : 'Try changing your search or filter.' }}</span>
+        </div>
+    </section>
+</main>

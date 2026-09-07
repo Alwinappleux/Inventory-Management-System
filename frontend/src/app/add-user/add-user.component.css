@@ -1,0 +1,11 @@
+:host { display: block; min-height: 100vh; background: #f8fafc; }
+.user-form-page { max-width: 620px; margin: 0 auto; padding: 48px 20px; }
+.user-form-card { padding: 32px; border: 1px solid #e2e8f0; border-radius: 14px; background: white; box-shadow: 0 12px 30px rgba(15, 23, 42, .07); }
+.eyebrow { color: #64748b; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+h1 { margin: 8px 0; color: #0f172a; }
+p { margin: 0 0 24px; color: #64748b; }
+form { display: grid; gap: 9px; }
+label { margin-top: 8px; color: #334155; font-weight: 700; }
+input, select { min-height: 42px; padding: 8px 11px; border: 1px solid #cbd5e1; border-radius: 7px; font: inherit; }
+small { color: #b91c1c; }
+button { margin-top: 16px; min-height: 44px; border: 0; border-radius: 7px; background: #1d4ed8; color: white; font: inherit; font-weight: 700; cursor: pointer; }

@@ -1,0 +1,21 @@
+<app-navbar></app-navbar>
+
+<main class="page-shell">
+  <header class="page-header">
+    <div><span class="eyebrow">Account management</span><h1>User List</h1><p>Manage administrator and user accounts.</p></div>
+    <strong>{{ filteredUsers.length }} users</strong>
+  </header>
+  <section class="table-card">
+    <div class="controls">
+      <input type="search" [(ngModel)]="searchTerm" placeholder="Search usernames" aria-label="Search usernames">
+      <select [(ngModel)]="roleFilter" aria-label="Filter users by role"><option value="">All roles</option><option value="admin">Admin</option><option value="user">User</option></select>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th><button type="button" (click)="setSort('user_id')">ID</button></th><th><button type="button" (click)="setSort('username')">Username</button></th><th><button type="button" (click)="setSort('role')">Role</button></th><th>Created</th></tr></thead>
+        <tbody><tr *ngFor="let user of filteredUsers"><td>#{{ user.user_id }}</td><td class="name">{{ user.username }}</td><td>{{ user.role }}</td><td>{{ user.created_at | date:'mediumDate' }}</td></tr></tbody>
+      </table>
+      <p class="empty" *ngIf="filteredUsers.length === 0">No matching users.</p>
+    </div>
+  </section>
+</main>

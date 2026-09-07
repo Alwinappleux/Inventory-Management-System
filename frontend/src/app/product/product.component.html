@@ -1,0 +1,72 @@
+<app-navbar></app-navbar>
+
+<main class="page-shell">
+  <header class="page-header">
+    <div>
+      <span class="page-eyebrow">Inventory catalog</span>
+      <h1>Products</h1>
+      <p>Manage your products, pricing, and available stock.</p>
+    </div>
+    <div class="record-count">
+      <strong>{{ products.length }}</strong>
+      <span>products</span>
+    </div>
+  </header>
+
+  <section class="table-card">
+    <div class="table-toolbar">
+      <h2>Product list</h2>
+      <span class="table-caption">Your current inventory</span>
+    </div>
+
+    <div class="list-controls">
+      <input type="search" [(ngModel)]="searchTerm" placeholder="Search products or categories" aria-label="Search products">
+      <select [(ngModel)]="categoryFilter" aria-label="Filter by category">
+        <option value="">All categories</option>
+        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+      </select>
+      <select [(ngModel)]="stockFilter" aria-label="Filter by stock">
+        <option value="all">All stock</option>
+        <option value="low">Low stock</option>
+        <option value="available">Available stock</option>
+      </select>
+    </div>
+
+    <div class="table-scroll" *ngIf="filteredProducts.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th><button type="button" class="sort-button" (click)="setSort('product_id')">ID</button></th>
+            <th><button type="button" class="sort-button" (click)="setSort('product_name')">Product</button></th>
+            <th><button type="button" class="sort-button" (click)="setSort('category')">Category</button></th>
+            <th><button type="button" class="sort-button" (click)="setSort('price')">Price</button></th>
+            <th><button type="button" class="sort-button" (click)="setSort('stock_quantity')">Stock</button></th>
+            <th *ngIf="isAdmin" style="text-align: left;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of filteredProducts">
+            <td class="muted-cell">#{{ product.product_id }}</td>
+            <td class="name-cell">{{ product.product_name }}</td>
+            <td><span class="category-badge">{{ product.category }}</span></td>
+            <td class="price-cell">{{ product.price | number:'1.2-2' }}</td>
+            <td>
+              <span class="stock-badge" [class.low-stock-badge]="product.stock_quantity <= 5">
+                {{ product.stock_quantity }} in stock
+              </span>
+            </td>
+            <td class="action-cell" *ngIf="isAdmin">
+              <button class="edit-btn" type="button" (click)="editProduct(product)">Edit</button>
+              <button class="delete-btn" type="button" (click)="deleteProduct(product.product_id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-state" *ngIf="filteredProducts.length === 0">
+      <strong>{{ products.length === 0 ? 'No products yet' : 'No matching products' }}</strong>
+      <span>{{ products.length === 0 ? 'Add your first product to start building your inventory.' : 'Try changing your search or filters.' }}</span>
+    </div>
+  </section>
+</main>

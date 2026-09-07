@@ -1,0 +1,95 @@
+<app-navbar></app-navbar>
+
+
+<div class="dashboard-container">
+
+    <section class="card pulse-card">
+        <div class="card-heading">
+            <div>
+                <span class="card-eyebrow">At a glance</span>
+                <h3>Inventory Pulse</h3>
+            </div>
+            <span class="heading-icon pulse-icon" aria-hidden="true">&#10003;</span>
+        </div>
+
+        <div class="insight-list">
+            <div class="insight-row">
+                <div class="insight-symbol blue-symbol">&#8593;</div>
+                <div>
+                    <span class="insight-label">Units sold</span>
+                    <strong>{{ totalUnitsSold }}</strong>
+                </div>
+            </div>
+
+            <div class="insight-row">
+                <div class="insight-symbol orange-symbol">!</div>
+                <div>
+                    <span class="insight-label">Needs attention</span>
+                    <strong>{{ lowStockProducts.length }} products</strong>
+                </div>
+            </div>
+
+            <div class="best-seller">
+                <span class="insight-label">Best seller</span>
+                <strong [title]="bestSellingProduct">{{ bestSellingProduct }}</strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="card sales-card">
+
+        <div class="card-heading">
+            <div>
+                <span class="card-eyebrow">Sales performance</span>
+                <h3>Top Selling Products</h3>
+            </div>
+            <span class="heading-icon sales-icon" aria-hidden="true">&#8593;</span>
+        </div>
+
+        <div *ngIf="topSellingProducts.length === 0" class="empty-state">
+            Sales data will appear here once products are sold.
+        </div>
+
+        <div *ngIf="topSellingProducts.length > 0" class="chart-area">
+            <div class="chart-gridline gridline-top"><span>{{ maxSales }}</span></div>
+            <div class="chart-gridline gridline-middle"><span>{{ maxSales / 2 | number:'1.0-0' }}</span></div>
+            <div class="chart-gridline gridline-bottom"><span>0</span></div>
+
+            <div class="bar-chart" role="img" aria-label="Bar chart showing top selling products">
+                <div *ngFor="let item of topSellingProducts" class="bar-column">
+                    <span class="bar-value">{{ item.total_sold }}</span>
+                    <div class="bar-track">
+                        <div class="sales-bar" [style.height.%]="getBarHeight(item.total_sold)"></div>
+                    </div>
+                    <span class="bar-label" [title]="item.product_name">{{ item.product_name }}</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="card low-stock-card">
+
+        <div class="card-heading">
+            <div>
+                <span class="card-eyebrow">Inventory health</span>
+                <h3>Low Stock Alerts</h3>
+            </div>
+            <span class="heading-icon warning-icon" aria-hidden="true">!</span>
+        </div>
+
+        <div *ngIf="lowStockProducts.length === 0" class="empty-state">
+            Stock levels look good right now.
+        </div>
+
+        <div *ngFor="let item of lowStockProducts" class="low-stock">
+
+            <span>{{ item.product_name }}</span>
+
+            <span>{{ item.stock_quantity }}</span>
+
+        </div>
+
+    </section>
+
+</div>

@@ -1,0 +1,157 @@
+<app-navbar></app-navbar>
+
+<div class="container">
+
+    <!-- Product Card -->
+    <div class="card">
+
+        <div class="card-heading">
+            <span class="card-eyebrow">Inventory item</span>
+            <h2>{{ isEditMode ? 'Edit Product' : 'Add Product' }}</h2>
+        </div>
+
+        <form [formGroup]="productForm" (ngSubmit)="saveProduct()" novalidate>
+
+            <label>Product Name:</label>
+            <input
+                type="text"
+                placeholder="Enter product name"
+                formControlName="product_name">
+            <small class="error-message" *ngIf="productForm.controls['product_name'].invalid && (productForm.controls['product_name'].touched || productSubmitted)">
+                Enter a product name with at least 2 characters.
+            </small>
+
+            <br>
+
+            <label>Price:</label>
+            <input
+                type="number"
+                inputmode="decimal"
+                pattern="^[0-9]+(\.[0-9]{1,2})?$"
+                (keydown)="blockNumberKeys($event)"
+                placeholder="Enter price"
+                formControlName="price"
+                min="0.01"
+                step="0.01">
+            <small class="error-message" *ngIf="productForm.controls['price'].invalid && (productForm.controls['price'].touched || productSubmitted)">
+                Enter a price greater than 0.
+            </small>
+
+            <br>
+
+            <label>Category:</label>
+            <select formControlName="category">
+                <option value="" disabled>Select category</option>
+                <option *ngFor="let item of categories" [value]="item">{{ item }}</option>
+            </select>
+            <small class="error-message" *ngIf="productForm.controls['category'].invalid && (productForm.controls['category'].touched || productSubmitted)">
+                Select a category.
+            </small>
+
+            <br>
+
+            <label>Stock Quantity:</label>
+            <input
+                type="number"
+                inputmode="numeric"
+                pattern="^[0-9]+$"
+                (keydown)="blockNonDigits($event)"
+                placeholder="Enter stock quantity"
+                formControlName="stock_quantity"
+                min="0"
+                step="1">
+            <small class="error-message" *ngIf="productForm.controls['stock_quantity'].invalid && (productForm.controls['stock_quantity'].touched || productSubmitted)">
+                Enter a whole number of 0 or more.
+            </small>
+
+            <br>
+
+            <label>Supplier Name:</label>
+            <select formControlName="supplier_id">
+                <option [ngValue]="0" disabled>Select supplier</option>
+                <option *ngFor="let supplier of suppliers" [ngValue]="supplier.supplier_id">
+                    {{ supplier.supplier_name }}
+                </option>
+            </select>
+            <small class="error-message" *ngIf="productForm.controls['supplier_id'].invalid && (productForm.controls['supplier_id'].touched || productSubmitted)">
+                Select a supplier.
+            </small>
+
+            <br><br>
+
+            <button type="submit">
+                {{ isEditMode ? 'Update Product' : 'Save Product' }}
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- Supplier Card -->
+    <div class="card">
+
+        <div class="card-heading">
+            <span class="card-eyebrow">Business partner</span>
+            <h2>{{ isSupplierEditMode ? 'Edit Supplier' : 'Add Supplier' }}</h2>
+        </div>
+
+        <form [formGroup]="supplierForm" (ngSubmit)="saveSupplier()" novalidate>
+
+            <label>Supplier Name:</label>
+            <input
+                type="text"
+                (keydown)="blockNonNameCharacters($event)"
+                placeholder="Enter supplier name"
+                formControlName="supplier_name">
+            <small class="error-message" *ngIf="supplierForm.controls['supplier_name'].invalid && (supplierForm.controls['supplier_name'].touched || supplierSubmitted)">
+                Enter a supplier name using letters and spaces only.
+            </small>
+
+            <br>
+
+            <label>Contact Number:</label>
+            <input
+                type="text"
+                inputmode="numeric"
+                pattern="^[0-9]{10}$"
+                maxlength="10"
+                (keydown)="blockNonDigits($event)"
+                placeholder="Enter contact number"
+                formControlName="contact_number">
+            <small class="error-message" *ngIf="supplierForm.controls['contact_number'].invalid && (supplierForm.controls['contact_number'].touched || supplierSubmitted)">
+                Enter a valid phone number.
+            </small>
+
+            <br>
+
+            <label>Email:</label>
+            <input
+                type="email"
+                placeholder="Enter email"
+                formControlName="email">
+            <small class="error-message" *ngIf="supplierForm.controls['email'].invalid && (supplierForm.controls['email'].touched || supplierSubmitted)">
+                Enter a valid email address.
+            </small>
+
+            <br>
+
+            <label>Address:</label>
+            <input
+                type="text"
+                placeholder="Enter address"
+                formControlName="address">
+            <small class="error-message" *ngIf="supplierForm.controls['address'].invalid && (supplierForm.controls['address'].touched || supplierSubmitted)">
+                Enter an address with at least 5 characters.
+            </small>
+
+            <br><br>
+
+            <button type="submit">
+                {{ isSupplierEditMode ? 'Update Supplier' : 'Save Supplier' }}
+            </button>
+
+        </form>
+
+    </div>
+
+</div>

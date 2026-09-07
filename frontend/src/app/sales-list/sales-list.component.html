@@ -1,0 +1,69 @@
+<app-navbar></app-navbar>
+
+<main class="page-shell">
+  <header class="page-header">
+    <div>
+      <span class="page-eyebrow">Sales activity</span>
+      <h1>Sales List</h1>
+      <p>Review every sale recorded in the inventory.</p>
+    </div>
+    <div class="record-count">
+      <strong>{{ sales.length }}</strong>
+      <span>sales</span>
+    </div>
+  </header>
+
+  <section class="table-card">
+    <div class="table-toolbar">
+      <h2>Recorded sales</h2>
+      <span class="table-caption">Latest transactions</span>
+    </div>
+
+    <div class="list-controls">
+      <input type="search" [(ngModel)]="searchTerm" placeholder="Search products or sale IDs" aria-label="Search sales">
+      <select [(ngModel)]="categoryFilter" aria-label="Filter sales by category">
+        <option value="">All categories</option>
+        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+      </select>
+    </div>
+
+    <div class="loading-state" *ngIf="loading">Loading sales...</div>
+    <div class="error-state" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <div class="table-scroll" *ngIf="!loading && !errorMessage && filteredSales.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th><button type="button" class="sort-button" (click)="setSort('sale_id')">ID</button></th>
+            <th><button type="button" class="sort-button" (click)="setSort('product_name')">Product</button></th>
+            <th><button type="button" class="sort-button" (click)="setSort('category')">Category</button></th>
+            <th *ngIf="isAdmin"><button type="button" class="sort-button" (click)="setSort('seller_username')">Sold by</button></th>
+            <th><button type="button" class="sort-button" (click)="setSort('customer_name')">Customer</button></th>
+            <th><button type="button" class="sort-button" (click)="setSort('customer_address')">Address</button></th>
+            <th><button type="button" class="sort-button" (click)="setSort('quantity_sold')">Quantity</button></th>
+            <th><button type="button" class="sort-button" (click)="setSort('price')">Unit price</button></th>
+            <th><button type="button" class="sort-button" (click)="setSort('total_price')">Total</button></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let sale of filteredSales">
+            <td class="muted-cell">#{{ sale.sale_id || sale.sales_id }}</td>
+            <td class="name-cell">{{ sale.product_name || ('Product #' + sale.product_id) }}</td>
+            <td>{{ sale.category || 'N/A' }}</td>
+            <td *ngIf="isAdmin">{{ sale.seller_username }}</td>
+            <td>{{ sale.customer_name }}</td>
+            <td>{{ sale.customer_address }}</td>
+            <td>{{ sale.quantity_sold }}</td>
+            <td>{{ sale.price | number:'1.2-2' }}</td>
+            <td class="price-cell">{{ sale.total_price | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !errorMessage && filteredSales.length === 0">
+      <strong>{{ sales.length === 0 ? 'No sales recorded' : 'No matching sales' }}</strong>
+      <span>{{ sales.length === 0 ? 'Sales will appear here after the first transaction.' : 'Try changing your search or filter.' }}</span>
+    </div>
+  </section>
+</main>
