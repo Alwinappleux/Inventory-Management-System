@@ -7,6 +7,7 @@ const productroutes = require('./routes/productroutes');
 const supplierroutes = require('./routes/supplierroutes');
 const dashboardroutes = require('./routes/dashboardroutes');
 const salesroutes = require('./routes/salesroutes');
+const authroutes = require('./routes/authroutes');
 const app = express();
 
 /* Middleware */
@@ -18,6 +19,7 @@ app.use('/', productroutes);
 app.use('/', supplierroutes);
 app.use('/', dashboardroutes);
 app.use('/', salesroutes);
+app.use('/', authroutes);
 /* Database Connection Check */
 pool.query('SELECT NOW()', (err) => {
     if (err) {

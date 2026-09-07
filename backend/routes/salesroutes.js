@@ -5,7 +5,9 @@ const {
     getCategories,
     getProductsByCategory,
     getProductDetails,
-    recordSale,getTopSellingProducts
+    recordSale,
+    getSales,
+    getTopSellingProducts
 } = require('../controllers/salescontroller');
 
 router.get('/categories', getCategories);
@@ -20,5 +22,6 @@ router.get(
     getProductDetails
 );
 router.post('/sales', recordSale);
+router.get('/sales', getSales);
 router.get('/top-selling', getTopSellingProducts);
 module.exports = router;
