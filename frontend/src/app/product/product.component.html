@@ -39,6 +39,7 @@
             <th><button type="button" class="sort-button" (click)="setSort('product_id')">ID</button></th>
             <th><button type="button" class="sort-button" (click)="setSort('product_name')">Product</button></th>
             <th><button type="button" class="sort-button" (click)="setSort('category')">Category</button></th>
+            <th><button type="button" class="sort-button" (click)="setSort('supplier_name')">Supplier</button></th>
             <th><button type="button" class="sort-button" (click)="setSort('price')">Price</button></th>
             <th><button type="button" class="sort-button" (click)="setSort('stock_quantity')">Stock</button></th>
             <th *ngIf="isAdmin" style="text-align: left;">Actions</th>
@@ -49,6 +50,7 @@
             <td class="muted-cell">#{{ product.product_id }}</td>
             <td class="name-cell">{{ product.product_name }}</td>
             <td><span class="category-badge">{{ product.category }}</span></td>
+            <td class="name-cell">{{ product.supplier_name}}</td>
             <td class="price-cell">{{ product.price | number:'1.2-2' }}</td>
             <td>
               <span class="stock-badge" [class.low-stock-badge]="product.stock_quantity <= 5">

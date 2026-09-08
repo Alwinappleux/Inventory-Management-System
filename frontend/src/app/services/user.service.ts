@@ -5,6 +5,7 @@ export interface ManagedUser {
   user_id: number;
   username: string;
   role: 'admin' | 'user';
+  status: 0 | 1;
   created_at?: string;
 }
 
@@ -20,5 +21,9 @@ export class UserService {
 
   addUser(user: { username: string; password: string; role: string }) {
     return this.http.post(this.apiUrl, user);
+  }
+
+  removeUser(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

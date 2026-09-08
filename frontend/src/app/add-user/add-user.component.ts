@@ -36,11 +36,11 @@ export class AddUserComponent {
     }
 
     this.userService.addUser(this.userForm.getRawValue() as { username: string; password: string; role: string }).subscribe({
-      next: () => {
-        alert('User added successfully');
+      next: (response: any) => {
+        alert(response.message || 'User added successfully');
         this.router.navigate(['/user-list']);
       },
-      error: () => alert('Unable to add user. The username may already exist.')
+      error: (error: any) => alert(error.error?.message || 'Unable to create user.')
     });
   }
 }

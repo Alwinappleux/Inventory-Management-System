@@ -21,11 +21,11 @@
 
         <div class="list-controls">
             <input type="search" [(ngModel)]="searchTerm" placeholder="Search suppliers or contacts" aria-label="Search suppliers">
-            <select [(ngModel)]="contactFilter" aria-label="Filter suppliers by email">
+            <!-- <select [(ngModel)]="contactFilter" aria-label="Filter suppliers by email">
                 <option value="all">All suppliers</option>
                 <option value="email">With email</option>
                 <option value="no-email">Without email</option>
-            </select>
+            </select> -->
         </div>
 
         <div class="table-scroll" *ngIf="filteredSuppliers.length > 0">
@@ -49,7 +49,7 @@
                         <td>{{ supplier.address }}</td>
                         <td class="action-cell" *ngIf="isAdmin">
                             <button class="edit-btn" type="button" (click)="editSupplier(supplier)">Edit</button>
-                            <button class="delete-btn" type="button" (click)="deleteSupplier(supplier.supplier_id)">Delete</button>
+                            <!-- <button class="delete-btn" type="button" (click)="deleteSupplier(supplier.supplier_id)">Delete</button> -->
                         </td>
                     </tr>
                 </tbody>

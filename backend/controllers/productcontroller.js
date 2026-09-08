@@ -38,7 +38,10 @@ const getProducts = async (req, res) => {
     try {
 
         const result = await pool.query(
-            'SELECT * FROM products'
+                        `SELECT products.*, suppliers.supplier_name
+                         FROM products
+                         LEFT JOIN suppliers
+                             ON products.supplier_id = suppliers.supplier_id`
         );
 
         res.status(200).json(result.rows);
@@ -124,6 +127,12 @@ const deleteProduct = async (req, res) => {
 
         res.status(200).json({ message: 'Product deleted successfully' });
     } catch (error) {
+        if (error.code === '23503') {
+            return res.status(409).json({
+                message: 'This product cannot be deleted because it has recorded sales.'
+            });
+        }
+
         console.error(error);
         res.status(500).json({ message: 'Error deleting product' });
     }

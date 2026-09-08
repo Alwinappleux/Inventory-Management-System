@@ -14,9 +14,10 @@ import { SupplierService } from '../services/supplier.service';
   styleUrls: ['./add-product.component.css']
 })
 export class AddProductComponent implements OnInit {
+  
 
   suppliers: any[] = [];
-  categories = ['Home Appliance', 'Smartphone', 'Sound System', 'Tele'];
+  categories = ['Home Appliance', 'Smartphone', 'Sound System', 'Laptop',  'Television', 'Camera', 'Gaming Console','Other'];
   isEditMode = false;
   editingProductId = 0;
   isSupplierEditMode = false;

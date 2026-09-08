@@ -1,0 +1,15 @@
+{
+  "routes": {
+    "/": {},
+    "/add-product": {},
+    "/add-sales": {},
+    "/add-user": {},
+    "/dashboard": {},
+    "/login": {},
+    "/navbar": {},
+    "/product": {},
+    "/sales-list": {},
+    "/supplier": {},
+    "/user-list": {}
+  }
+}

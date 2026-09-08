@@ -7,152 +7,189 @@
         <h2>Record Sale</h2>
 
         <form [formGroup]="salesForm" (ngSubmit)="saveSale()" novalidate>
-        <div class="form-grid">
-        <div class="form-field full-width">
-        <label for="category">Category</label>
+            <div class="form-grid">
+                <div class="form-field full-width">
+                    <label for="category">Category</label>
 
-        <select
-            id="category"
-            formControlName="category"
-            (change)="loadProducts()">
+                    <select id="category" formControlName="category" (change)="loadProducts()">
 
-            <option value="">
-                Select Category
-            </option>
+                        <option value="">
+                            Select Category
+                        </option>
 
-            <option
-                *ngFor="let item of categories"
-                [value]="item.category">
+                        <option *ngFor="let item of categories" [value]="item.category">
 
-                {{ item.category }}
+                            {{ item.category }}
 
-            </option>
+                        </option>
 
-        </select>
-        <small class="error-message" *ngIf="salesForm.controls['category'].invalid && (salesForm.controls['category'].touched || submitted)">
-            Please select a category.
-        </small>
-        </div>
+                    </select>
+                    <small class="error-message"
+                        *ngIf="salesForm.controls['category'].invalid && (salesForm.controls['category'].touched || submitted)">
+                        Please select a category.
+                    </small>
+                </div>
 
-        <div class="form-field full-width">
-        <label for="productId">Product</label>
+                <div class="form-field full-width">
+                    <label for="supplierId">Supplier</label>
 
-        <select
-    id="productId"
-    formControlName="productId"
-    (change)="loadProductDetails()">
+                    <select id="supplierId" formControlName="supplierId" (change)="loadProducts()">
 
-    <option value="">
-        Select Product
-    </option>
+                        <option value="">
+                            Select Supplier
+                        </option>
 
-    <option
-        *ngFor="let item of products"
-        [value]="item.product_id">
+                        <option *ngFor="let item of suppliers" [value]="item.supplier_id">
 
-        {{ item.product_name }}
+                            {{ item.supplier_name }}
 
-    </option>
+                        </option>
 
-</select>
-        <small class="error-message" *ngIf="salesForm.controls['productId'].invalid && (salesForm.controls['productId'].touched || submitted)">
-            Please select a product.
-        </small>
-        </div>
+                    </select>
+                    <small class="error-message"
+                        *ngIf="salesForm.controls['supplierId'].invalid && (salesForm.controls['supplierId'].touched || submitted)">
+                        Please select a supplier.
+                    </small>
+                </div>
 
-        <div class="form-field">
-        <label for="customerName">Customer Name</label>
-        <input id="customerName" type="text" formControlName="customerName" pattern="^[A-Za-z ]+$">
-        <small class="error-message" *ngIf="salesForm.controls['customerName'].invalid && (salesForm.controls['customerName'].touched || submitted)">
-            Enter a customer name using letters and spaces only.
-        </small>
-        </div>
+                <div class="form-field full-width">
+                    <label for="productId">Product</label>
 
-        <div class="form-field">
-        <label for="customerAddress">Customer Address</label>
-        <input id="customerAddress" type="text" formControlName="customerAddress">
-        <small class="error-message" *ngIf="salesForm.controls['customerAddress'].invalid && (salesForm.controls['customerAddress'].touched || submitted)">
-            Enter a customer address.
-        </small>
-        </div>
+                    <select id="productId" formControlName="productId" (change)="loadProductDetails()">
 
-        <div class="form-field">
-        <label>Supplier</label>
+                        <option value="">
+                            Select Product
+                        </option>
 
-        <input
-            type="text"
-            [value]="supplierName"
-            readonly>
-        </div>
+                        <option *ngFor="let item of products" [value]="item.product_id">
 
-        <div class="form-field">
-        <label>Current Stock</label>
+                            {{ item.product_name }}
 
-        <input
-            type="text"
-            inputmode="numeric"
-            pattern="^[0-9]+$"
-            [value]="currentStock"
-            readonly>
-        </div>
+                        </option>
 
-        <div class="form-field">
-        <label>Price</label>
+                    </select>
+                    <small class="error-message"
+                        *ngIf="salesForm.controls['productId'].invalid && (salesForm.controls['productId'].touched || submitted)">
+                        Please select a product.
+                    </small>
+                </div>
+                <div class="form-field">
+                    <label for="customerName">Customer Name</label>
+                    <input id="customerName" type="text" formControlName="customerName" pattern="^[A-Za-z ]+$">
+                    <small class="error-message"
+                        *ngIf="salesForm.controls['customerName'].invalid && (salesForm.controls['customerName'].touched || submitted)">
+                        Enter a customer name using letters and spaces only.
+                    </small>
+                </div>
 
-        <input
-            type="number"
-            inputmode="decimal"
-            pattern="^[0-9]+(\.[0-9]{1,2})?$"
-            (keydown)="blockNumberKeys($event)"
-            [value]="price"
-            readonly>
-        </div>
+                <div class="form-field">
+                    <label for="customerAddress">Customer Address</label>
+                    <input id="customerAddress" type="text" formControlName="customerAddress">
+                    <small class="error-message"
+                        *ngIf="salesForm.controls['customerAddress'].invalid && (salesForm.controls['customerAddress'].touched || submitted)">
+                        Enter a customer address.
+                    </small>
+                </div>
 
-        <div class="form-field">
-        <label for="quantitySold">Quantity Sold</label>
 
-        <input
-            id="quantitySold"
-            type="number"
-            inputmode="numeric"
-            pattern="^[0-9]+$"
-            (keydown)="blockNonDigits($event)"
-            formControlName="quantitySold"
-            step="1"
-            [max]="currentStock">
-        <small class="error-message" *ngIf="salesForm.controls['quantitySold'].hasError('required') && (salesForm.controls['quantitySold'].touched || submitted)">
-            Enter the quantity sold.
-        </small>
-        <small class="error-message" *ngIf="salesForm.controls['quantitySold'].hasError('min') && (salesForm.controls['quantitySold'].touched || submitted)">
-            Quantity must be greater than 0.
-        </small>
-        <small class="error-message" *ngIf="salesForm.controls['quantitySold'].hasError('pattern') && (salesForm.controls['quantitySold'].touched || submitted)">
-            Quantity must be a whole number.
-        </small>
-        <small class="error-message" *ngIf="salesForm.controls['quantitySold'].hasError('max') && (salesForm.controls['quantitySold'].touched || submitted)">
-            Quantity cannot exceed the current stock.
-        </small>
-        </div>
 
-        <div class="form-field">
-        <label>Total Price</label>
+                <div class="form-field">
+                    <label>Current Stock</label>
 
-        <input
-            type="number"
-            inputmode="decimal"
-            pattern="^[0-9]+(\.[0-9]{1,2})?$"
-            (keydown)="blockNumberKeys($event)"
-            [value]="totalPrice"
-            readonly>
-        </div>
-        </div>
+                    <input type="text" inputmode="numeric" pattern="^[0-9]+$" [value]="currentStock" readonly>
+                </div>
 
-        <button class="submit-button" type="submit">
+                <div class="form-field">
+                    <label>Price</label>
 
-    Record Sale
+                    <input type="number" inputmode="decimal" pattern="^[0-9]+(\.[0-9]{1,2})?$"
+                        (keydown)="blockNumberKeys($event)" [value]="price" readonly>
+                </div>
 
-</button>
+                <div class="form-field">
+                    <label for="quantitySold">Quantity Sold</label>
+
+                    <input id="quantitySold" type="number" inputmode="numeric" pattern="^[0-9]+$"
+                        (keydown)="blockNonDigits($event)" formControlName="quantitySold" step="1" [max]="currentStock">
+                    <small class="error-message"
+                        *ngIf="salesForm.controls['quantitySold'].hasError('required') && (salesForm.controls['quantitySold'].touched || submitted)">
+                        Enter the quantity sold.
+                    </small>
+                    <small class="error-message"
+                        *ngIf="salesForm.controls['quantitySold'].hasError('min') && (salesForm.controls['quantitySold'].touched || submitted)">
+                        Quantity must be greater than 0.
+                    </small>
+                    <small class="error-message"
+                        *ngIf="salesForm.controls['quantitySold'].hasError('pattern') && (salesForm.controls['quantitySold'].touched || submitted)">
+                        Quantity must be a whole number.
+                    </small>
+                    <small class="error-message"
+                        *ngIf="salesForm.controls['quantitySold'].hasError('max') && (salesForm.controls['quantitySold'].touched || submitted)">
+                        Quantity cannot exceed the current stock.
+                    </small>
+                </div>
+
+                <div class="form-field">
+                    <label>Total Price</label>
+
+                    <input type="number" inputmode="decimal" pattern="^[0-9]+(\.[0-9]{1,2})?$"
+                        (keydown)="blockNumberKeys($event)" [value]="totalPrice" readonly>
+                </div>
+            </div>
+
+            <button class="submit-button" type="submit">
+
+                Record Sale
+
+            </button>
         </form>
     </div>
 
+</div>
+
+<div class="invoice-modal" *ngIf="invoice" role="dialog" aria-modal="true" aria-labelledby="invoice-title">
+    <section class="invoice" aria-label="Sale invoice">
+        <button class="invoice-close" type="button" (click)="closeInvoice()" aria-label="Close invoice" title="Close invoice">&times;</button>
+
+        <div class="invoice-header">
+            <div>
+                <span class="invoice-eyebrow">Inventory Management</span>
+                <h2 id="invoice-title">Sales Invoice</h2>
+            </div>
+            <div class="invoice-meta">
+                <strong>{{ invoice.number }}</strong>
+                <span>{{ invoice.date | date:'medium' }}</span>
+            </div>
+        </div>
+
+        <div class="invoice-customer">
+            <div><span>Customer</span><strong>{{ invoice.customerName }}</strong></div>
+            <div><span>Address</span><strong>{{ invoice.customerAddress }}</strong></div>
+        </div>
+
+        <div class="invoice-table-wrap">
+            <table class="invoice-table">
+                <thead>
+                    <tr><th>Product</th><th>Category</th><th>Supplier</th><th>Qty</th><th>Price</th><th>Total</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ invoice.productName }}</td>
+                        <td>{{ invoice.category }}</td>
+                        <td>{{ invoice.supplierName }}</td>
+                        <td>{{ invoice.quantity }}</td>
+                        <td>{{ invoice.price | currency }}</td>
+                        <td>{{ invoice.total | currency }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="invoice-footer">
+            <strong>Total Amount <span>{{ invoice.total | currency }}</span></strong>
+            <button type="button" class="print-button" (click)="printInvoice()">
+                Download PDF
+            </button>
+        </div>
+    </section>
 </div>

@@ -3,8 +3,13 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(10) NOT NULL CHECK (role IN ('admin', 'user')),
+    status INTEGER NOT NULL DEFAULT 1 CHECK (status IN (0, 1)),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS status INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE users DROP CONSTRAINT IF EXISTS users_status_check;
+ALTER TABLE users ADD CONSTRAINT users_status_check CHECK (status IN (0, 1));
 
 INSERT INTO users (username, password, role)
 VALUES ('admin', 'admin123', 'admin'), ('user', 'user123', 'user')
@@ -14,9 +19,11 @@ CREATE OR REPLACE FUNCTION authenticate_user(p_username TEXT, p_password TEXT)
 RETURNS TABLE (user_id INTEGER, username VARCHAR, role VARCHAR)
 LANGUAGE SQL
 AS $$
-    SELECT u.user_id, u.username, u.role
+        SELECT u.user_id, u.username, u.role
     FROM users u
-    WHERE LOWER(u.username) = LOWER(p_username) AND u.password = p_password;
+        WHERE LOWER(u.username) = LOWER(p_username)
+            AND u.password = p_password
+            AND u.status = 1;
 $$;
 
 ALTER TABLE sales ADD COLUMN IF NOT EXISTS customer_name VARCHAR(120);

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { SalesService } from '../services/sales.service';
+import { SupplierService } from '../services/supplier.service';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -16,6 +17,8 @@ import { AuthService } from '../services/auth.service';
 export class SalesComponent implements OnInit {
 
   categories: any[] = [];
+  allSuppliers: any[] = [];
+  suppliers: any[] = [];
   products: any[] = [];
 
   supplierName = '';
@@ -24,6 +27,18 @@ export class SalesComponent implements OnInit {
   submitted = false;
   customerName = '';
   customerAddress = '';
+  invoice: {
+    number: string;
+    date: Date;
+    productName: string;
+    category: string;
+    supplierName: string;
+    quantity: number;
+    price: number;
+    total: number;
+    customerName: string;
+    customerAddress: string;
+  } | null = null;
 
   salesForm: FormGroup;
 
@@ -45,12 +60,14 @@ export class SalesComponent implements OnInit {
 
   constructor(
     private salesService: SalesService,
+    private supplierService: SupplierService,
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router
   ) {
     this.salesForm = this.formBuilder.group({
       category: ['', Validators.required],
+      supplierId: ['', Validators.required],
       productId: [0, [Validators.required, Validators.min(1)]],
       quantitySold: [0, [Validators.required, Validators.min(1), Validators.pattern(/^[0-9]+$/)]],
       customerName: ['', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]],
@@ -60,6 +77,7 @@ export class SalesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
+    this.loadSuppliers();
   }
 
   loadCategories(): void {
@@ -70,11 +88,24 @@ export class SalesComponent implements OnInit {
     });
   }
 
+  loadSuppliers(): void {
+    this.supplierService.getSuppliers().subscribe({
+      next: (data: any) => {
+        this.allSuppliers = data;
+        this.suppliers = data;
+      }
+    });
+  }
+
   loadProducts(): void {
     const category = this.salesForm.controls['category'].value;
+    const supplierId = this.salesForm.controls['supplierId'].value;
 
     if (!category) {
+      this.suppliers = this.allSuppliers;
       this.products = [];
+      this.salesForm.controls['supplierId'].setValue('');
+      this.salesForm.controls['productId'].setValue(0);
       return;
     }
 
@@ -82,9 +113,26 @@ export class SalesComponent implements OnInit {
       .getProductsByCategory(category)
       .subscribe({
         next: (data: any) => {
-          this.products = data;
+          const categorySupplierIds = new Set(
+            data.map((product: any) => String(product.supplier_id))
+          );
+
+          this.suppliers = this.allSuppliers.filter((supplier: any) =>
+            categorySupplierIds.has(String(supplier.supplier_id))
+          );
+
+          const selectedSupplierIsAvailable = this.suppliers.some(
+            (supplier: any) => String(supplier.supplier_id) === String(supplierId)
+          );
+
+          if (!selectedSupplierIsAvailable) {
+            this.salesForm.controls['supplierId'].setValue('');
+          }
+
+          this.products = selectedSupplierIsAvailable
+            ? data.filter((product: any) => String(product.supplier_id) === String(supplierId))
+            : [];
           this.salesForm.controls['productId'].setValue(0);
-          this.supplierName = '';
           this.currentStock = 0;
           this.price = 0;
           this.salesForm.controls['quantitySold'].setValue(0);
@@ -136,6 +184,24 @@ saveSale(): void {
 
   this.salesService.recordSale(sale).subscribe({
     next: () => {
+      const productId = Number(this.salesForm.controls['productId'].value);
+      const selectedProduct = this.products.find(product => Number(product.product_id) === productId);
+      const quantity = Number(this.salesForm.controls['quantitySold'].value);
+      const customerName = this.salesForm.controls['customerName'].value.trim();
+      const customerAddress = this.salesForm.controls['customerAddress'].value.trim();
+
+      this.invoice = {
+        number: `INV-${Date.now()}`,
+        date: new Date(),
+        productName: selectedProduct?.product_name || 'Product',
+        category: this.salesForm.controls['category'].value,
+        supplierName: this.supplierName,
+        quantity,
+        price: this.price,
+        total: this.price * quantity,
+        customerName,
+        customerAddress
+      };
 
       alert('Sale Recorded Successfully');
 
@@ -144,7 +210,6 @@ saveSale(): void {
       this.salesForm.controls['customerAddress'].reset('');
       this.price = 0;
       this.submitted = false;
-      this.router.navigate(['/sales-list']);
 
     },
     error: () => {
@@ -155,4 +220,17 @@ saveSale(): void {
   });
 
 }
+
+  printInvoice(): void {
+    const goToSalesList = (): void => {
+      this.router.navigate(['/sales-list']);
+    };
+
+    window.addEventListener('afterprint', goToSalesList, { once: true });
+    window.print();
+  }
+
+  closeInvoice(): void {
+    this.invoice = null;
+  }
 }

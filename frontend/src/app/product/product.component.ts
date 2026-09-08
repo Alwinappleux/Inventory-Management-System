@@ -93,8 +93,10 @@ export class ProductComponent implements OnInit {
         alert('Product deleted successfully');
         this.loadProducts();
       },
-      error: () => {
-        alert('Error deleting product');
+      error: (error: any) => {
+        alert(error.status === 409
+          ? error.error.message
+          : 'Error deleting product');
       }
     });
   }

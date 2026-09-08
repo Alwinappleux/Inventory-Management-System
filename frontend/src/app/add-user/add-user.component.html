@@ -9,11 +9,11 @@
     <form [formGroup]="userForm" (ngSubmit)="saveUser()" novalidate>
       <label for="username">Username</label>
       <input id="username" type="text" formControlName="username" autocomplete="off">
-      <small *ngIf="userForm.controls.username.invalid && (userForm.controls.username.touched || submitted)">Use letters, numbers, or underscore.</small>
+      <small *ngIf="userForm.controls['username'].invalid && (userForm.controls['username'].touched || submitted)">Use letters, numbers, or underscore.</small>
 
       <label for="password">Password</label>
       <input id="password" type="password" formControlName="password" autocomplete="new-password">
-      <small *ngIf="userForm.controls.password.invalid && (userForm.controls.password.touched || submitted)">Password must be at least 6 characters.</small>
+      <small *ngIf="userForm.controls['password'].invalid && (userForm.controls['password'].touched || submitted)">Password must be at least 6 characters.</small>
 
       <label for="role">Role</label>
       <select id="role" formControlName="role">

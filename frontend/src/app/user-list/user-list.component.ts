@@ -43,4 +43,19 @@ export class UserListComponent implements OnInit {
     this.sortDirection = this.sortColumn === column && this.sortDirection === 'asc' ? 'desc' : 'asc';
     this.sortColumn = column;
   }
+
+  removeUser(user: ManagedUser): void {
+    if (!confirm(`Remove user ${user.username}? They will no longer be able to log in.`)) {
+      return;
+    }
+
+    this.userService.removeUser(user.user_id).subscribe({
+      next: () => {
+        user.status = 0;
+      },
+      error: error => {
+        alert(error.error?.message || 'Unable to remove user.');
+      }
+    });
+  }
 }
